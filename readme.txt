@@ -1,18 +1,18 @@
 === Cookie Consent Video Embed - CookieScript ===
 Contributors: benervine
-Tags: cookiescript, youtube, consent, gdpr, video
+Tags: cookiescript, cookiebot, youtube, consent, gdpr, video
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.2.1
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display YouTube video thumbnails with a consent overlay until CookieScript marketing consent is granted.
+Display YouTube video thumbnails with a consent overlay until marketing consent is granted via CookieScript or Cookiebot.
 
 == Description ==
 
-Cookie Consent Video Embed - CookieScript blocks YouTube iframes until consent is given, then lets CookieScript load the real player.
+Cookie Consent Video Embed blocks YouTube iframes until consent is given, then lets the active consent manager (CookieScript or Cookiebot) load the real player.
 
 When consent is missing, visitors see:
 
@@ -25,13 +25,14 @@ Plugin settings are available under Settings > Cookie Video Consent.
 
 == Features ==
 
+* Choose the active consent manager — CookieScript or Cookiebot — from the settings page
 * Converts YouTube embeds to youtube-nocookie URLs
-* Adds CookieScript attributes (`data-src`, `data-cookiecategory`)
+* Writes the correct blocking attributes for the selected manager (`data-src`/`data-cookiecategory` for CookieScript, `data-cookieblock-src`/`data-cookieconsent` for Cookiebot)
 * Shows consent placeholder before cookie approval
 * Optional global default background image that overrides YouTube thumbnails
 * Customisable consent text with safe default fallback
 * Customisable consent link label and URL
-* If no link URL is set, clicking the CTA attempts to open the CookieScript preferences popup
+* If no link URL is set, clicking the CTA opens the active consent manager's preferences popup (`CookieScript.show()` or `Cookiebot.renew()`)
 
 == Installation ==
 
@@ -57,15 +58,24 @@ To enable admin updates from GitHub:
 
 Current support targets YouTube embeds.
 
+= Which consent managers are supported? =
+
+CookieScript and Cookiebot. Pick the one active on your site under Settings > Cookie Video Consent > Consent manager. Only one can be active at a time — this setting must match whichever CMP is actually installed on the site, or blocked videos will never unlock.
+
 = What if I leave Consent Link URL empty? =
 
-The button tries to open CookieScript settings popup directly.
+The button tries to open the active consent manager's settings popup directly.
 
 = Can I force one placeholder image for all videos? =
 
 Yes. Set Default video background image URL in plugin settings.
 
 == Changelog ==
+
+= 2.3.0 =
+* Added a Consent Manager setting (CookieScript / Cookiebot) so one plugin install can support either platform.
+* Blocking attributes and the "reopen preferences" call now switch based on the selected consent manager.
+* Generalised admin page copy and readme so it no longer assumes CookieScript specifically.
 
 = 2.2.1 =
 * Fixed the "Update cookie preferences" fallback CTA (shown when no Consent Link URL is set) — it previously did nothing on click; it now correctly opens the CookieScript preferences popup.

@@ -3,6 +3,19 @@
 All notable changes to this plugin are documented in this file.
 This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.3.0] - 2026-07-23
+
+### Added
+- [cookie-consent-video-embed-CookieScript.php] "Consent manager" setting (CookieScript / Cookiebot) so one plugin install can support either platform on a per-site basis.
+- [assets/js/ccve-cookiescript.js] Blocking attributes now switch at runtime: `data-src`/`data-cookiecategory` for CookieScript, `data-cookieblock-src`/`data-cookieconsent` for Cookiebot.
+- [assets/js/ccve-cookiescript.js] `openCookiebotSettings()` calling `Cookiebot.renew()`; the fallback CTA now routes to the correct manager's reopen call based on the setting, with a same-page fallback to the other manager's API if the primary one isn't present.
+
+### Changed
+- [cookie-consent-video-embed-CookieScript.php] Admin page title, header, and field descriptions generalised — no longer assume CookieScript is the only supported platform.
+- [readme.txt] Description, features list, and FAQ updated for dual consent-manager support; Stable tag synced to `2.3.0`.
+
+---
+
 ## [2.2.1] - 2026-07-23
 
 ### Fixed
@@ -66,6 +79,7 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Initial YouTube iframe CookieScript compatibility logic.
 
+[2.3.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.0.0...v2.1.0

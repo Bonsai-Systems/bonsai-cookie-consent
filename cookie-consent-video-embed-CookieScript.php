@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Bonsai Cookie Consent - CookieScript
  * Plugin URI:  https://thebonsaidigitalcollective.co.uk
- * Description: Replaces YouTube embeds with a consent-safe thumbnail overlay until CookieScript marketing consent is granted.
- * Version:     2.2.1
+ * Description: Replaces YouTube embeds with a consent-safe thumbnail overlay until marketing consent is granted via CookieScript or Cookiebot.
+ * Version:     2.3.0
  * Author:      Ben Ervine / The Bonsai Digital Collective
  * Author URI:  https://thebonsaidigitalcollective.co.uk
  * License:     GPL-2.0+
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'CCVE_COOKIESCRIPT_VERSION', '2.2.1' );
+define( 'CCVE_COOKIESCRIPT_VERSION', '2.3.0' );
 define( 'CCVE_COOKIESCRIPT_OPTION_KEY', 'ccve_cookiescript_options' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_REPOSITORY', 'https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_BRANCH', 'main' );
@@ -48,12 +48,25 @@ if ( file_exists( $ccve_autoload ) ) {
 }
 
 /**
+ * Return the list of supported consent manager keys.
+ *
+ * @return array<string, string>
+ */
+function ccve_cookiescript_get_consent_managers() {
+    return array(
+        'cookiescript' => __( 'CookieScript', 'ccve-cookiescript' ),
+        'cookiebot'    => __( 'Cookiebot', 'ccve-cookiescript' ),
+    );
+}
+
+/**
  * Return plugin default settings.
  *
  * @return array<string, string>
  */
 function ccve_cookiescript_get_default_options() {
     return array(
+        'consent_manager'      => 'cookiescript',
         'cookie_category'      => 'marketing',
         'default_bg_image'     => '',
         'consent_text'         => 'Please accept marketing cookies to view this video.',
@@ -90,6 +103,11 @@ function ccve_cookiescript_sanitize_options( $input ) {
         return $defaults;
     }
 
+    $consent_manager = isset( $input['consent_manager'] ) ? sanitize_key( $input['consent_manager'] ) : $defaults['consent_manager'];
+    if ( ! array_key_exists( $consent_manager, ccve_cookiescript_get_consent_managers() ) ) {
+        $consent_manager = $defaults['consent_manager'];
+    }
+
     $cookie_category = isset( $input['cookie_category'] ) ? sanitize_key( $input['cookie_category'] ) : $defaults['cookie_category'];
     if ( '' === $cookie_category ) {
         $cookie_category = $defaults['cookie_category'];
@@ -109,6 +127,7 @@ function ccve_cookiescript_sanitize_options( $input ) {
     }
 
     return array(
+        'consent_manager'    => $consent_manager,
         'cookie_category'    => $cookie_category,
         'default_bg_image'   => $default_bg_image,
         'consent_text'       => $consent_text,
@@ -138,6 +157,14 @@ function ccve_cookiescript_register_settings() {
         __( 'Display Settings', 'ccve-cookiescript' ),
         '__return_false',
         'ccve-cookiescript'
+    );
+
+    add_settings_field(
+        'ccve_consent_manager',
+        __( 'Consent manager', 'ccve-cookiescript' ),
+        'ccve_cookiescript_render_consent_manager_field',
+        'ccve-cookiescript',
+        'ccve_cookiescript_main_section'
     );
 
     add_settings_field(
@@ -219,6 +246,27 @@ function ccve_cookiescript_enqueue_admin_styles( $hook ) {
 add_action( 'admin_enqueue_scripts', 'ccve_cookiescript_enqueue_admin_styles' );
 
 /**
+ * Render consent manager field.
+ *
+ * @return void
+ */
+function ccve_cookiescript_render_consent_manager_field() {
+    $options  = ccve_cookiescript_get_options();
+    $managers = ccve_cookiescript_get_consent_managers();
+    ?>
+    <fieldset>
+        <?php foreach ( $managers as $key => $label ) : ?>
+            <label style="display:block;margin-bottom:4px;">
+                <input type="radio" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_manager]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $options['consent_manager'], $key ); ?> />
+                <?php echo esc_html( $label ); ?>
+            </label>
+        <?php endforeach; ?>
+    </fieldset>
+    <p class="description"><?php esc_html_e( 'Which cookie consent management platform is active on this site. Controls the blocking attributes written to the iframe and which API is called to reopen the preferences dialog.', 'ccve-cookiescript' ); ?></p>
+    <?php
+}
+
+/**
  * Render cookie category field.
  *
  * @return void
@@ -227,7 +275,7 @@ function ccve_cookiescript_render_cookie_category_field() {
     $options = ccve_cookiescript_get_options();
     ?>
     <input type="text" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[cookie_category]" value="<?php echo esc_attr( $options['cookie_category'] ); ?>" class="regular-text" />
-    <p class="description"><?php esc_html_e( 'The CookieScript category key used on blocked iframes (default: marketing).', 'ccve-cookiescript' ); ?></p>
+    <p class="description"><?php esc_html_e( 'The consent category key used on blocked iframes for both CookieScript and Cookiebot (default: marketing).', 'ccve-cookiescript' ); ?></p>
     <?php
 }
 
@@ -267,7 +315,7 @@ function ccve_cookiescript_render_consent_link_url_field() {
     $options = ccve_cookiescript_get_options();
     ?>
     <input type="url" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_link_url]" value="<?php echo esc_url( $options['consent_link_url'] ); ?>" class="regular-text" placeholder="https://example.com/privacy-policy" />
-    <p class="description"><?php esc_html_e( 'Optional. Leave empty to trigger the CookieScript preferences popup on click.', 'ccve-cookiescript' ); ?></p>
+    <p class="description"><?php esc_html_e( 'Optional. Leave empty to trigger the active consent manager\'s preferences popup on click.', 'ccve-cookiescript' ); ?></p>
     <?php
 }
 
@@ -296,9 +344,9 @@ function ccve_cookiescript_render_settings_page() {
     <div class="wrap">
         <div class="ccve-admin-header">
             <span class="ccve-admin-header__brand"><?php esc_html_e( 'The Bonsai Digital Collective', 'ccve-cookiescript' ); ?></span>
-            <span class="ccve-admin-header__plugin"><?php esc_html_e( 'Cookie Consent - CookieScript', 'ccve-cookiescript' ); ?></span>
+            <span class="ccve-admin-header__plugin"><?php esc_html_e( 'Cookie Video Consent', 'ccve-cookiescript' ); ?></span>
         </div>
-        <h1><?php esc_html_e( 'Cookie Video Consent - CookieScript', 'ccve-cookiescript' ); ?></h1>
+        <h1><?php esc_html_e( 'Cookie Video Consent', 'ccve-cookiescript' ); ?></h1>
         <form method="post" action="options.php">
             <?php
             settings_fields( 'ccve_cookiescript_settings_group' );
@@ -337,6 +385,7 @@ function ccve_cookiescript_enqueue_assets() {
         'ccve-cookiescript-script',
         'ccveCookieScriptSettings',
         array(
+            'consentManager'  => $options['consent_manager'],
             'cookieCategory'  => $options['cookie_category'],
             'defaultBgImage'  => $options['default_bg_image'],
             'consentText'     => $options['consent_text'],
