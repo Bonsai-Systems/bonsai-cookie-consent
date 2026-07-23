@@ -3,6 +3,19 @@
 All notable changes to this plugin are documented in this file.
 This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.2.1] - 2026-07-23
+
+### Fixed
+- [assets/js/ccve-cookiescript.js] Fallback "Update cookie preferences" CTA (shown when no Consent Link URL is configured) is now wired to actually open the CookieScript preferences popup — previously the click handler was never attached, so the button did nothing.
+
+### Added
+- [cookie-consent-video-embed-CookieScript.php] Uninstall hook to delete `ccve_cookiescript_options` when the plugin is removed.
+
+### Changed
+- [readme.txt] Stable tag synced to `2.2.1` (was out of date at `2.1.0`).
+
+---
+
 ## [2.2.0] - 2026-06-24
 
 ### Changed
@@ -53,6 +66,7 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Initial YouTube iframe CookieScript compatibility logic.
 
+[2.2.1]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v1.7...v2.0.0

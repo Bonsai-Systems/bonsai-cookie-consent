@@ -3,7 +3,7 @@
  * Plugin Name: Bonsai Cookie Consent - CookieScript
  * Plugin URI:  https://thebonsaidigitalcollective.co.uk
  * Description: Replaces YouTube embeds with a consent-safe thumbnail overlay until CookieScript marketing consent is granted.
- * Version:     2.2.0
+ * Version:     2.2.1
  * Author:      Ben Ervine / The Bonsai Digital Collective
  * Author URI:  https://thebonsaidigitalcollective.co.uk
  * License:     GPL-2.0+
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'CCVE_COOKIESCRIPT_VERSION', '2.2.0' );
+define( 'CCVE_COOKIESCRIPT_VERSION', '2.2.1' );
 define( 'CCVE_COOKIESCRIPT_OPTION_KEY', 'ccve_cookiescript_options' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_REPOSITORY', 'https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_BRANCH', 'main' );
@@ -346,3 +346,13 @@ function ccve_cookiescript_enqueue_assets() {
     );
 }
 add_action( 'wp_enqueue_scripts', 'ccve_cookiescript_enqueue_assets' );
+
+/**
+ * Remove plugin options on uninstall.
+ *
+ * @return void
+ */
+function ccve_cookiescript_uninstall() {
+    delete_option( CCVE_COOKIESCRIPT_OPTION_KEY );
+}
+register_uninstall_hook( __FILE__, 'ccve_cookiescript_uninstall' );

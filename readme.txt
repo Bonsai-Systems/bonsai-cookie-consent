@@ -4,7 +4,7 @@ Tags: cookiescript, youtube, consent, gdpr, video
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.1.0
+Stable tag: 2.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,6 +66,14 @@ The button tries to open CookieScript settings popup directly.
 Yes. Set Default video background image URL in plugin settings.
 
 == Changelog ==
+
+= 2.2.1 =
+* Fixed the "Update cookie preferences" fallback CTA (shown when no Consent Link URL is set) — it previously did nothing on click; it now correctly opens the CookieScript preferences popup.
+* Added uninstall cleanup to remove plugin settings when the plugin is deleted.
+
+= 2.2.0 =
+* Renamed plugin to Bonsai Cookie Consent - CookieScript and updated branding/URIs.
+* Added branded admin settings header.
 
 = 2.1.0 =
 * Added GitHub-based update checking (Plugin Update Checker)
