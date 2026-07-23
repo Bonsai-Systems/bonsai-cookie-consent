@@ -1,19 +1,19 @@
 <?php return array(
     'root' => array(
-        'name' => '__root__',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'name' => 'bonsai-digital-collective/cookie-consent-video-embed-cookiescript',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => 'd8527b9cbcac8bb47af16c4caa50ea4d25e1acbe',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => false,
     ),
     'versions' => array(
-        '__root__' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+        'bonsai-digital-collective/cookie-consent-video-embed-cookiescript' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => 'd8527b9cbcac8bb47af16c4caa50ea4d25e1acbe',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

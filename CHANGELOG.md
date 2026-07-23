@@ -3,6 +3,17 @@
 All notable changes to this plugin are documented in this file.
 This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.3.1] - 2026-07-23
+
+### Fixed
+- [composer.json] Fatal error (`Cannot declare class ComposerAutoloaderInit88bd1240a06e12371573341aa3549092, because the name is already in use`) when this plugin was active alongside another Bonsai plugin bundling the same version of `yahnis-elsts/plugin-update-checker` (e.g. Bonsai Code Injector). Both plugins shipped a byte-identical `composer.json`, so Composer generated the same autoloader class name in both `vendor/` directories — the second plugin to load fataled on class redeclaration.
+- Added a unique `name` field to `composer.json` and regenerated `vendor/` from a clean install, giving this plugin's Composer autoloader class a distinct name (`ComposerAutoloaderInit059726867b99d530d594054e5e01c204`).
+
+### Security note for other Bonsai plugins
+This is a structural risk, not unique to this plugin — any two Bonsai plugins that vendor the same library via an unmodified/identical `composer.json` will collide the same way if ever active together on one site. `bonsai-code-injector` (and any other plugin bundling `yahnis-elsts/plugin-update-checker` without a unique `composer.json` `name`) should get the same fix.
+
+---
+
 ## [2.3.0] - 2026-07-23
 
 ### Added
@@ -79,6 +90,7 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Initial YouTube iframe CookieScript compatibility logic.
 
+[2.3.1]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.1...v2.3.0
 [2.2.1]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.1.0...v2.2.0

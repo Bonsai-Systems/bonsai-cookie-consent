@@ -4,7 +4,7 @@ Tags: cookiescript, cookiebot, youtube, consent, gdpr, video
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,9 @@ The button tries to open the active consent manager's settings popup directly.
 Yes. Set Default video background image URL in plugin settings.
 
 == Changelog ==
+
+= 2.3.1 =
+* Fixed a fatal error ("Cannot declare class ComposerAutoloaderInit...") on sites also running another Bonsai plugin that bundles the same Composer library (e.g. Bonsai Code Injector). Both plugins previously shipped an identical composer.json, which made Composer generate the same autoloader class name in both — activating both together crashed the site. This plugin's composer.json now declares a unique package name so its autoloader class no longer collides.
 
 = 2.3.0 =
 * Added a Consent Manager setting (CookieScript / Cookiebot) so one plugin install can support either platform.
