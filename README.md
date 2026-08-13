@@ -53,10 +53,10 @@ This plugin uses [`yahnis-elsts/plugin-update-checker`](https://github.com/Yahni
 ### Repository
 
 ```
-https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent
+https://github.com/Bonsai-Systems/bonsai-cookie-consent
 ```
 
-If the repository is ever moved, update `CCVE_COOKIESCRIPT_GITHUB_REPOSITORY` in the main plugin file and the `Update URI` plugin header to match.
+This is the distribution repo that live sites' update checks pull from — it is intentionally separate from the `origin` dev remote (`gakdesign/bonsai-cookie-consent`) used for day-to-day development, matching the same split used by `bonsai-code-injector`. If the distribution repository is ever moved, update `CCVE_COOKIESCRIPT_GITHUB_REPOSITORY` in the main plugin file and the `Update URI` plugin header to match.
 
 ## Release Notes
 

@@ -3,6 +3,13 @@
 All notable changes to this plugin are documented in this file.
 This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.3.2] - 2026-08-13
+
+### Fixed
+- [cookie-consent-video-embed-CookieScript.php] `Update URI` header and `CCVE_COOKIESCRIPT_GITHUB_REPOSITORY` pointed at `The-Bonsai-Digital-Collective/bonsai-cookie-consent`, which is not the repo live sites' update checks actually pull from. Corrected both to `https://github.com/Bonsai-Systems/bonsai-cookie-consent`, matching the distribution repo used by `bonsai-code-injector`. Without this fix, WordPress admin update checks would never find new releases.
+
+---
+
 ## [2.3.1] - 2026-07-23
 
 ### Fixed
@@ -90,10 +97,11 @@ This is a structural risk, not unique to this plugin — any two Bonsai plugins 
 ### Added
 - Initial YouTube iframe CookieScript compatibility logic.
 
-[2.3.1]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.3.0...v2.3.1
-[2.3.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.1...v2.3.0
-[2.2.1]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.2.0...v2.2.1
-[2.2.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.1.0...v2.2.0
-[2.1.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v2.0.0...v2.1.0
-[2.0.0]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/compare/v1.7...v2.0.0
-[1.7]: https://github.com/The-Bonsai-Digital-Collective/bonsai-cookie-consent/releases/tag/v1.7
+[2.3.2]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v2.3.1...v2.3.2
+[2.3.1]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v2.3.0...v2.3.1
+[2.3.0]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v2.2.1...v2.3.0
+[2.2.1]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v2.2.0...v2.2.1
+[2.2.0]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v2.0.0...v2.1.0
+[2.0.0]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/compare/v1.7...v2.0.0
+[1.7]: https://github.com/Bonsai-Systems/bonsai-cookie-consent/releases/tag/v1.7
