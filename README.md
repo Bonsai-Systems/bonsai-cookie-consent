@@ -1,6 +1,6 @@
 # Bonsai Cookie Consent - CookieScript
 
-A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalcollective.co.uk) that replaces YouTube embeds with a consent-safe placeholder until CookieScript marketing consent is granted.
+A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalcollective.co.uk) that replaces YouTube and Vimeo embeds with a consent-safe placeholder until CookieScript marketing consent is granted.
 
 > **Status:** Stable
 > **Requires:** WordPress 6.4+ • PHP 7.4+
@@ -8,6 +8,7 @@ A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalco
 ## What It Does
 
 - Converts YouTube embeds to `youtube-nocookie`
+- Adds `dnt=1` to Vimeo embeds (Vimeo's do-not-track mode) and fetches the placeholder thumbnail via Vimeo oEmbed
 - Adds CookieScript-compatible attributes:
   - `data-src`
   - `data-cookiecategory`
@@ -23,7 +24,7 @@ A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalco
 Path: **Settings > Cookie Video Consent**
 
 - **Cookie category key** — CookieScript category key to assign to video embeds (default: `marketing`).
-- **Default video background image URL** — If set, this overrides all YouTube thumbnails.
+- **Default video background image URL** — If set, this overrides all YouTube and Vimeo thumbnails.
 - **Consent text** — Overlay message shown before consent. If left empty, the plugin default is used.
 - **Consent link URL (optional)** — If provided, CTA links to this URL. If empty, CTA attempts to open the CookieScript preferences popup.
 - **Consent link label** — Text shown on the CTA button.

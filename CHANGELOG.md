@@ -5,6 +5,19 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-09-30
+
+### Added
+- [assets/js/ccve-cookiescript.js] Vimeo support. `player.vimeo.com` iframes (in `src` or `data-src`) now go through the same consent blocking and placeholder as YouTube.
+- [assets/js/ccve-cookiescript.js] Vimeo embed URLs get `dnt=1`, Vimeo's equivalent of `youtube-nocookie`. Existing params, including the `h=` hash unlisted videos need, are kept.
+- [assets/js/ccve-cookiescript.js] Vimeo placeholder thumbnails are looked up through `vimeo.com/api/oembed.json` with `credentials: 'omit'`. If the lookup fails the placeholder stays black. The default background image setting still overrides it.
+- Wrapper gets a `ccve-provider-{youtube|vimeo}` class for per-provider styling.
+
+### Changed
+- [cookie-consent-video-embed-CookieScript.php] Plugin description, settings intro and default image help text now mention Vimeo. Version bumped to 2.5.0.
+
+---
+
 ## [2.4.0] - 2026-09-30
 
 ### Changed

@@ -1,22 +1,22 @@
 === Cookie Consent Video Embed - CookieScript ===
 Contributors: benervine
-Tags: cookiescript, cookiebot, youtube, consent, gdpr, video
+Tags: cookiescript, cookiebot, youtube, vimeo, consent, gdpr
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Display YouTube video thumbnails with a consent overlay until marketing consent is granted via CookieScript or Cookiebot.
+Display YouTube and Vimeo video thumbnails with a consent overlay until marketing consent is granted via CookieScript or Cookiebot.
 
 == Description ==
 
-Cookie Consent Video Embed blocks YouTube iframes until consent is given, then lets the active consent manager (CookieScript or Cookiebot) load the real player.
+Cookie Consent Video Embed blocks YouTube and Vimeo iframes until consent is given, then lets the active consent manager (CookieScript or Cookiebot) load the real player.
 
 When consent is missing, visitors see:
 
-* A thumbnail image (YouTube thumbnail by default)
+* A thumbnail image (the YouTube or Vimeo thumbnail by default)
 * A dark overlay for legibility
 * Centered consent message text
 * A configurable consent CTA link/button
@@ -27,9 +27,10 @@ Plugin settings are available under Settings > Cookie Video Consent.
 
 * Choose the active consent manager — CookieScript or Cookiebot — from the settings page
 * Converts YouTube embeds to youtube-nocookie URLs
+* Adds `dnt=1` (do not track) to Vimeo embeds
 * Writes the correct blocking attributes for the selected manager (`data-src`/`data-cookiecategory` for CookieScript, `data-cookieblock-src`/`data-cookieconsent` for Cookiebot)
 * Shows consent placeholder before cookie approval
-* Optional global default background image that overrides YouTube thumbnails
+* Optional global default background image that overrides YouTube and Vimeo thumbnails
 * Customisable consent text with safe default fallback
 * Customisable consent link label and URL
 * If no link URL is set, clicking the CTA opens the active consent manager's preferences popup (`CookieScript.show()` or `Cookiebot.renew()`)
@@ -56,7 +57,7 @@ To enable admin updates from GitHub:
 
 = What videos are supported? =
 
-Current support targets YouTube embeds.
+YouTube (youtube.com, youtu.be) and Vimeo (player.vimeo.com) iframe embeds. Vimeo thumbnails are fetched from the public Vimeo oEmbed API without cookies. Set a default background image if you want no request to Vimeo before consent.
 
 = Which consent managers are supported? =
 
@@ -71,6 +72,13 @@ The button tries to open the active consent manager's settings popup directly.
 Yes. Set Default video background image URL in plugin settings.
 
 == Changelog ==
+
+= 2.5.0 =
+* Added Vimeo support. Vimeo iframes are now blocked until consent, like YouTube, and get `dnt=1` so the player does not set tracking cookies once loaded.
+* Vimeo placeholders show the video thumbnail, fetched from Vimeo oEmbed without cookies.
+
+= 2.4.0 =
+* Settings screen restyled with the Bonsai admin design system.
 
 = 2.3.2 =
 * Fixed the Update URI header and GitHub repository constant, which pointed at the wrong org (The-Bonsai-Digital-Collective instead of Bonsai-Systems) — update checks were silently pointed at a repo with no releases, so this plugin could never see new versions in wp-admin.

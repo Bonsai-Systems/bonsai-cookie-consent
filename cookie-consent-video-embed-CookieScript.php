@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Bonsai Cookie Consent
  * Plugin URI:  https://thebonsaidigitalcollective.co.uk
- * Description: Replaces YouTube embeds with a consent-safe thumbnail overlay until marketing consent is granted via CookieScript or Cookiebot.
- * Version:     2.4.0
+ * Description: Replaces YouTube and Vimeo embeds with a consent-safe thumbnail overlay until marketing consent is granted via CookieScript or Cookiebot.
+ * Version:     2.5.0
  * Author:      Ben Ervine / The Bonsai Digital Collective
  * Author URI:  https://thebonsaidigitalcollective.co.uk
  * License:     GPL-2.0+
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'CCVE_COOKIESCRIPT_VERSION', '2.4.0' );
+define( 'CCVE_COOKIESCRIPT_VERSION', '2.5.0' );
 define( 'CCVE_COOKIESCRIPT_OPTION_KEY', 'ccve_cookiescript_options' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_REPOSITORY', 'https://github.com/Bonsai-Systems/bonsai-cookie-consent' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_BRANCH', 'main' );
@@ -292,7 +292,7 @@ function ccve_cookiescript_render_default_bg_image_field() {
     $options = ccve_cookiescript_get_options();
     ?>
     <input type="url" id="ccve-default-bg-image" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[default_bg_image]" value="<?php echo esc_url( $options['default_bg_image'] ); ?>" class="regular-text" placeholder="https://example.com/video-placeholder.jpg" />
-    <p class="description"><?php esc_html_e( 'If set, this image overrides YouTube thumbnails for all blocked videos.', 'ccve-cookiescript' ); ?></p>
+    <p class="description"><?php esc_html_e( 'If set, this image overrides YouTube and Vimeo thumbnails for all blocked videos.', 'ccve-cookiescript' ); ?></p>
     <?php
 }
 
@@ -352,7 +352,7 @@ function ccve_cookiescript_render_settings_page() {
         <?php
         ccve_cookiescript_render_admin_header(
             __( 'Cookie Video Consent', 'ccve-cookiescript' ),
-            __( 'Replaces YouTube embeds with a consent-safe thumbnail until marketing consent is given through CookieScript or Cookiebot.', 'ccve-cookiescript' )
+            __( 'Replaces YouTube and Vimeo embeds with a consent-safe thumbnail until marketing consent is given through CookieScript or Cookiebot.', 'ccve-cookiescript' )
         );
         ?>
         <form method="post" action="options.php">
