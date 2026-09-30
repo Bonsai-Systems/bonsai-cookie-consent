@@ -7,6 +7,7 @@ A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalco
 
 ## What It Does
 
+- Rewrites YouTube and Vimeo iframes server-side (full-page output buffer, `includes/iframe-blocker.php`) so the browser never receives a live `src` — nothing loads before consent, including iframes echoed directly by themes or ACF templates
 - Converts YouTube embeds to `youtube-nocookie`
 - Adds `dnt=1` to Vimeo embeds (Vimeo's do-not-track mode) and fetches the placeholder thumbnail via Vimeo oEmbed
 - Adds CookieScript-compatible attributes:
@@ -18,6 +19,15 @@ A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalco
   - Centred consent message
   - Centred CTA link/button
 - Automatically reveals the iframe when CookieScript loads the `src`
+- Front-end script still handles iframes injected after page load (modals, load-more) as a fallback
+
+### Disabling server-side blocking
+
+Skipped automatically in wp-admin, AJAX, REST, feeds and page builder previews (Elementor, Divi, Beaver Builder, Bricks, Oxygen, WPBakery). To turn it off on a site, fall back to the script only:
+
+```php
+add_filter( 'ccve_cookiescript_block_iframes', '__return_false' );
+```
 
 ## Admin Settings
 

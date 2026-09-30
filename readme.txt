@@ -1,10 +1,10 @@
 === Cookie Consent Video Embed - CookieScript ===
 Contributors: benervine
 Tags: cookiescript, cookiebot, youtube, vimeo, consent, gdpr
-Requires at least: 6.0
+Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.5.0
+Stable tag: 2.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,7 @@ Plugin settings are available under Settings > Cookie Video Consent.
 == Features ==
 
 * Choose the active consent manager — CookieScript or Cookiebot — from the settings page
+* Blocks YouTube and Vimeo iframes on the server, so the browser never loads them before consent (including iframes output directly by themes and ACF templates)
 * Converts YouTube embeds to youtube-nocookie URLs
 * Adds `dnt=1` (do not track) to Vimeo embeds
 * Writes the correct blocking attributes for the selected manager (`data-src`/`data-cookiecategory` for CookieScript, `data-cookieblock-src`/`data-cookieconsent` for Cookiebot)
@@ -67,11 +68,20 @@ CookieScript and Cookiebot. Pick the one active on your site under Settings > Co
 
 The button tries to open the active consent manager's settings popup directly.
 
+= Can I turn off server-side blocking? =
+
+Yes: `add_filter( 'ccve_cookiescript_block_iframes', '__return_false' );`. Videos are then only blocked by the front-end script, which runs after the page has loaded, so they may start loading before consent.
+
 = Can I force one placeholder image for all videos? =
 
 Yes. Set Default video background image URL in plugin settings.
 
 == Changelog ==
+
+= 2.5.1 =
+* Fixed videos starting to load before consent. Iframes in the page HTML were only blocked once the page had loaded, so YouTube or Vimeo could already have been contacted. They are now rewritten on the server before the page is sent.
+* Iframes added to the page later (modals, load more) are still blocked by the front-end script.
+* Server-side blocking is skipped in page builder editors and can be turned off with the `ccve_cookiescript_block_iframes` filter.
 
 = 2.5.0 =
 * Added Vimeo support. Vimeo iframes are now blocked until consent, like YouTube, and get `dnt=1` so the player does not set tracking cookies once loaded.

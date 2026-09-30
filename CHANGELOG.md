@@ -5,6 +5,18 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+## [2.5.1] - 2026-09-30
+
+### Fixed
+- [includes/iframe-blocker.php] Videos could start loading before consent. Iframes with a live `src` in the page HTML began loading as the browser parsed them, and the front-end script only blocked them at `DOMContentLoaded`, so Google or Vimeo had already been contacted. YouTube and Vimeo iframes are now rewritten in a full-page output buffer (`template_redirect`) before the HTML is sent: `src` is removed and the privacy URL and the active consent manager's blocking attributes are written, plus a `data-ccve-provider` marker. Uses `WP_HTML_Tag_Processor` rather than regex.
+- Skipped for wp-admin, AJAX, REST, cron, feeds, non-HTML responses and page builder previews (Elementor, Divi, Beaver Builder, Bricks, Oxygen, WPBakery). New `ccve_cookiescript_block_iframes` filter turns it off per site. Any failure returns the original page and logs to `error_log()`.
+
+### Changed
+- [assets/js/ccve-cookiescript.js] Server-blocked iframes only get the placeholder, and their attributes are left alone, so a video the consent manager has already unblocked is not blocked again. The JS-only path stays as the fallback for iframes injected after page load.
+- [readme.txt] `Requires at least` corrected from 6.0 to 6.4 to match the plugin header.
+
+---
+
 ## [2.5.0] - 2026-09-30
 
 ### Added
