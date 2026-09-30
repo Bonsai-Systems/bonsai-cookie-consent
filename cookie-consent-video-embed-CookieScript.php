@@ -3,7 +3,7 @@
  * Plugin Name: Bonsai Cookie Consent
  * Plugin URI:  https://thebonsaidigitalcollective.co.uk
  * Description: Replaces YouTube embeds with a consent-safe thumbnail overlay until marketing consent is granted via CookieScript or Cookiebot.
- * Version:     2.3.2
+ * Version:     2.4.0
  * Author:      Ben Ervine / The Bonsai Digital Collective
  * Author URI:  https://thebonsaidigitalcollective.co.uk
  * License:     GPL-2.0+
@@ -18,10 +18,13 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'CCVE_COOKIESCRIPT_VERSION', '2.3.2' );
+define( 'CCVE_COOKIESCRIPT_VERSION', '2.4.0' );
 define( 'CCVE_COOKIESCRIPT_OPTION_KEY', 'ccve_cookiescript_options' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_REPOSITORY', 'https://github.com/Bonsai-Systems/bonsai-cookie-consent' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_BRANCH', 'main' );
+define( 'CCVE_COOKIESCRIPT_URL', plugin_dir_url( __FILE__ ) );
+
+require_once plugin_dir_path( __FILE__ ) . 'includes/admin-ui.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -172,7 +175,8 @@ function ccve_cookiescript_register_settings() {
         __( 'Cookie category key', 'ccve-cookiescript' ),
         'ccve_cookiescript_render_cookie_category_field',
         'ccve-cookiescript',
-        'ccve_cookiescript_main_section'
+        'ccve_cookiescript_main_section',
+        array( 'label_for' => 'ccve-cookie-category' )
     );
 
     add_settings_field(
@@ -180,7 +184,8 @@ function ccve_cookiescript_register_settings() {
         __( 'Default video background image URL', 'ccve-cookiescript' ),
         'ccve_cookiescript_render_default_bg_image_field',
         'ccve-cookiescript',
-        'ccve_cookiescript_main_section'
+        'ccve_cookiescript_main_section',
+        array( 'label_for' => 'ccve-default-bg-image' )
     );
 
     add_settings_field(
@@ -188,7 +193,8 @@ function ccve_cookiescript_register_settings() {
         __( 'Consent text', 'ccve-cookiescript' ),
         'ccve_cookiescript_render_consent_text_field',
         'ccve-cookiescript',
-        'ccve_cookiescript_main_section'
+        'ccve_cookiescript_main_section',
+        array( 'label_for' => 'ccve-consent-text' )
     );
 
     add_settings_field(
@@ -196,7 +202,8 @@ function ccve_cookiescript_register_settings() {
         __( 'Consent link URL (optional)', 'ccve-cookiescript' ),
         'ccve_cookiescript_render_consent_link_url_field',
         'ccve-cookiescript',
-        'ccve_cookiescript_main_section'
+        'ccve_cookiescript_main_section',
+        array( 'label_for' => 'ccve-consent-link-url' )
     );
 
     add_settings_field(
@@ -204,7 +211,8 @@ function ccve_cookiescript_register_settings() {
         __( 'Consent link label', 'ccve-cookiescript' ),
         'ccve_cookiescript_render_consent_link_label_field',
         'ccve-cookiescript',
-        'ccve_cookiescript_main_section'
+        'ccve_cookiescript_main_section',
+        array( 'label_for' => 'ccve-consent-link-label' )
     );
 }
 add_action( 'admin_init', 'ccve_cookiescript_register_settings' );
@@ -226,7 +234,7 @@ function ccve_cookiescript_add_admin_menu() {
 add_action( 'admin_menu', 'ccve_cookiescript_add_admin_menu' );
 
 /**
- * Enqueue inline admin styles scoped to the plugin settings page.
+ * Enqueue the Bonsai admin stylesheet on the plugin settings page only.
  *
  * @param string $hook Current admin page hook suffix.
  * @return void
@@ -236,12 +244,7 @@ function ccve_cookiescript_enqueue_admin_styles( $hook ) {
         return;
     }
 
-    wp_add_inline_style(
-        'wp-admin',
-        '.ccve-admin-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#ee4367;border-radius:3px;margin:0 0 16px;}'
-        . '.ccve-admin-header__brand{color:#fff;font-weight:700;font-size:13px;letter-spacing:.02em;}'
-        . '.ccve-admin-header__plugin{color:rgba(255,255,255,.75);font-size:12px;}'
-    );
+    ccve_cookiescript_enqueue_admin_ui();
 }
 add_action( 'admin_enqueue_scripts', 'ccve_cookiescript_enqueue_admin_styles' );
 
@@ -255,8 +258,9 @@ function ccve_cookiescript_render_consent_manager_field() {
     $managers = ccve_cookiescript_get_consent_managers();
     ?>
     <fieldset>
+        <legend class="screen-reader-text"><?php esc_html_e( 'Consent manager', 'ccve-cookiescript' ); ?></legend>
         <?php foreach ( $managers as $key => $label ) : ?>
-            <label style="display:block;margin-bottom:4px;">
+            <label>
                 <input type="radio" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_manager]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $options['consent_manager'], $key ); ?> />
                 <?php echo esc_html( $label ); ?>
             </label>
@@ -274,7 +278,7 @@ function ccve_cookiescript_render_consent_manager_field() {
 function ccve_cookiescript_render_cookie_category_field() {
     $options = ccve_cookiescript_get_options();
     ?>
-    <input type="text" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[cookie_category]" value="<?php echo esc_attr( $options['cookie_category'] ); ?>" class="regular-text" />
+    <input type="text" id="ccve-cookie-category" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[cookie_category]" value="<?php echo esc_attr( $options['cookie_category'] ); ?>" class="regular-text" />
     <p class="description"><?php esc_html_e( 'The consent category key used on blocked iframes for both CookieScript and Cookiebot (default: marketing).', 'ccve-cookiescript' ); ?></p>
     <?php
 }
@@ -287,7 +291,7 @@ function ccve_cookiescript_render_cookie_category_field() {
 function ccve_cookiescript_render_default_bg_image_field() {
     $options = ccve_cookiescript_get_options();
     ?>
-    <input type="url" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[default_bg_image]" value="<?php echo esc_url( $options['default_bg_image'] ); ?>" class="regular-text" placeholder="https://example.com/video-placeholder.jpg" />
+    <input type="url" id="ccve-default-bg-image" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[default_bg_image]" value="<?php echo esc_url( $options['default_bg_image'] ); ?>" class="regular-text" placeholder="https://example.com/video-placeholder.jpg" />
     <p class="description"><?php esc_html_e( 'If set, this image overrides YouTube thumbnails for all blocked videos.', 'ccve-cookiescript' ); ?></p>
     <?php
 }
@@ -301,8 +305,11 @@ function ccve_cookiescript_render_consent_text_field() {
     $options  = ccve_cookiescript_get_options();
     $defaults = ccve_cookiescript_get_default_options();
     ?>
-    <textarea name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_text]" rows="4" class="large-text"><?php echo esc_textarea( $options['consent_text'] ); ?></textarea>
-    <p class="description"><?php echo esc_html( sprintf( 'Shown over blocked videos. Default fallback: %s', $defaults['consent_text'] ) ); ?></p>
+    <textarea id="ccve-consent-text" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_text]" rows="4" class="large-text"><?php echo esc_textarea( $options['consent_text'] ); ?></textarea>
+    <p class="description"><?php
+    /* translators: %s: default consent text */
+    echo esc_html( sprintf( __( 'Shown over blocked videos. Default fallback: %s', 'ccve-cookiescript' ), $defaults['consent_text'] ) );
+    ?></p>
     <?php
 }
 
@@ -314,7 +321,7 @@ function ccve_cookiescript_render_consent_text_field() {
 function ccve_cookiescript_render_consent_link_url_field() {
     $options = ccve_cookiescript_get_options();
     ?>
-    <input type="url" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_link_url]" value="<?php echo esc_url( $options['consent_link_url'] ); ?>" class="regular-text" placeholder="https://example.com/privacy-policy" />
+    <input type="url" id="ccve-consent-link-url" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_link_url]" value="<?php echo esc_url( $options['consent_link_url'] ); ?>" class="regular-text" placeholder="https://example.com/privacy-policy" />
     <p class="description"><?php esc_html_e( 'Optional. Leave empty to trigger the active consent manager\'s preferences popup on click.', 'ccve-cookiescript' ); ?></p>
     <?php
 }
@@ -327,7 +334,7 @@ function ccve_cookiescript_render_consent_link_url_field() {
 function ccve_cookiescript_render_consent_link_label_field() {
     $options = ccve_cookiescript_get_options();
     ?>
-    <input type="text" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_link_label]" value="<?php echo esc_attr( $options['consent_link_label'] ); ?>" class="regular-text" />
+    <input type="text" id="ccve-consent-link-label" name="<?php echo esc_attr( CCVE_COOKIESCRIPT_OPTION_KEY ); ?>[consent_link_label]" value="<?php echo esc_attr( $options['consent_link_label'] ); ?>" class="regular-text" />
     <?php
 }
 
@@ -341,18 +348,21 @@ function ccve_cookiescript_render_settings_page() {
         wp_die( esc_html__( 'Insufficient permissions.', 'ccve-cookiescript' ) );
     }
     ?>
-    <div class="wrap">
-        <div class="ccve-admin-header">
-            <span class="ccve-admin-header__brand"><?php esc_html_e( 'The Bonsai Digital Collective', 'ccve-cookiescript' ); ?></span>
-            <span class="ccve-admin-header__plugin"><?php esc_html_e( 'Cookie Video Consent', 'ccve-cookiescript' ); ?></span>
-        </div>
-        <h1><?php esc_html_e( 'Cookie Video Consent', 'ccve-cookiescript' ); ?></h1>
+    <div class="wrap bonsai-ui bonsai-ui--narrow">
+        <?php
+        ccve_cookiescript_render_admin_header(
+            __( 'Cookie Video Consent', 'ccve-cookiescript' ),
+            __( 'Replaces YouTube embeds with a consent-safe thumbnail until marketing consent is given through CookieScript or Cookiebot.', 'ccve-cookiescript' )
+        );
+        ?>
         <form method="post" action="options.php">
-            <?php
-            settings_fields( 'ccve_cookiescript_settings_group' );
-            do_settings_sections( 'ccve-cookiescript' );
-            submit_button();
-            ?>
+            <section class="bonsai-ui-card">
+                <?php
+                settings_fields( 'ccve_cookiescript_settings_group' );
+                do_settings_sections( 'ccve-cookiescript' );
+                ?>
+            </section>
+            <?php submit_button(); ?>
         </form>
     </div>
     <?php

@@ -3,6 +3,20 @@
 All notable changes to this plugin are documented in this file.
 This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+## [2.4.0] - 2026-09-30
+
+### Changed
+- [includes/admin-ui.php, assets/] Settings screen restyled with the Bonsai admin design system: logo header with version and GitHub/changelog links, settings in a card. Replaces the inline-CSS pink banner. Stylesheet loads on this screen only. No option or field changes.
+
+### Fixed
+- [cookie-consent-video-embed-CookieScript.php] Field labels weren't tied to their inputs; added `label_for` and IDs, plus a screen-reader legend for the consent manager radios.
+- [cookie-consent-video-embed-CookieScript.php] "Default fallback" description wasn't translatable.
+- Removed inline `style` attributes from the consent manager radios.
+
+---
+
 ## [2.3.2] - 2026-08-13
 
 ### Fixed
