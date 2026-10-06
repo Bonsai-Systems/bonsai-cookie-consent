@@ -90,6 +90,31 @@ function ccve_cookiescript_get_blocking_attributes( $consent_manager ) {
 }
 
 /**
+ * Attributes that may hold the real embed URL, in priority order.
+ *
+ * Lazy-loaders move the URL out of `src`: WP Rocket uses `data-lazy-src` with
+ * `src="about:blank"`, others (LiteSpeed, a3 Lazy Load) use `data-src`.
+ * Mirrors EMBED_URL_ATTRS in assets/js/ccve-cookiescript.js.
+ *
+ * @return string[]
+ */
+function ccve_cookiescript_get_embed_url_attributes() {
+    return array( 'src', 'data-lazy-src', 'data-src' );
+}
+
+/**
+ * Lazy-loader attributes that would load the iframe behind the consent manager's back.
+ *
+ * Removed once an iframe is blocked so the lazy-loader script ignores it.
+ * Mirrors LAZYLOAD_ATTRS in assets/js/ccve-cookiescript.js.
+ *
+ * @return string[]
+ */
+function ccve_cookiescript_get_lazyload_attributes() {
+    return array( 'data-lazy-src', 'data-rocket-lazyload' );
+}
+
+/**
  * Rewrite supported video iframes in an HTML string so they are blocked until consent.
  *
  * @param string $html HTML to process.
@@ -117,16 +142,34 @@ function ccve_cookiescript_block_iframes_in_html( $html ) {
             continue;
         }
 
-        $src      = $processor->get_attribute( 'src' );
-        $data_src = $processor->get_attribute( 'data-src' );
-        $original = is_string( $src ) && '' !== $src ? $src : ( is_string( $data_src ) ? $data_src : '' );
-        $provider = ccve_cookiescript_get_provider( $original );
+        // First attribute holding a supported video URL. Checking each in turn (rather than
+        // taking the first non-empty one) skips lazy-load placeholders like `src="about:blank"`.
+        $original = '';
+        $provider = '';
+        foreach ( ccve_cookiescript_get_embed_url_attributes() as $attribute ) {
+            $value = $processor->get_attribute( $attribute );
+            if ( ! is_string( $value ) ) {
+                continue;
+            }
+
+            $provider = ccve_cookiescript_get_provider( $value );
+            if ( '' !== $provider ) {
+                $original = $value;
+                break;
+            }
+        }
 
         if ( '' === $provider ) {
             continue;
         }
 
         $processor->remove_attribute( 'src' );
+
+        // Otherwise the lazy-loader's script would copy the URL into `src` and load it without consent.
+        foreach ( ccve_cookiescript_get_lazyload_attributes() as $attribute ) {
+            $processor->remove_attribute( $attribute );
+        }
+        $processor->remove_class( 'rocket-lazyload' );
 
         // A pre-blocked `data-src` is only meaningful to CookieScript; drop it when writing Cookiebot's attribute instead.
         if ( 'data-src' !== $attributes['src'] ) {

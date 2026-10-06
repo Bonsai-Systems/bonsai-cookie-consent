@@ -6,6 +6,8 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ## [Unreleased]
 
 ### Fixed
+- [includes/iframe-blocker.php] WP Rocket's iframe LazyLoad bypassed consent. WP Rocket outputs `src="about:blank"` with the real URL in `data-lazy-src`, so the blocker skipped the iframe and WP Rocket's script then loaded standard `youtube.com` with no consent check. The blocker now checks `src`, `data-lazy-src` and `data-src` in turn for a supported video URL. Once blocked, it strips `data-lazy-src`, `data-rocket-lazyload` and the `rocket-lazyload` class so the lazy-loader leaves the iframe alone.
+- [assets/js/ccve-cookiescript.js] Same handling in the front-end fallback: `data-lazy-src` added to the selectors and URL lookup, lazy-loader attributes stripped, and on Cookiebot sites a leftover `data-src` is removed (matching the server-side blocker) so `data-src` lazy-loaders can't load it.
 - [assets/js/ccve-cookiescript.js] Videos inside a theme ratio box (`.embed-container`, `.videoWrapper`, FitVids, core's `.wp-has-aspect-ratio` responsive embeds) showed at double height before consent and could collapse to 0px after it. The placeholder added its own 16:9 box on top of the parent's padding, and the theme's `position: absolute; height: 100%` iframe rule then sized the video against our empty wrapper. Before wrapping, the script now checks whether the iframe is absolutely positioned, and if so adds `ccve-video-wrapper--fill`.
 - [assets/css/ccve-cookiescript.css] New `.ccve-video-wrapper--fill` modifier makes the wrapper, placeholder and iframe fill the parent's existing ratio box instead of setting their own aspect ratio. Iframes not in a container keep the existing 16:9 behaviour.
 
