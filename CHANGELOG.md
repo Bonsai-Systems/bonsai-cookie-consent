@@ -5,6 +5,10 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+---
+
+## [2.5.2] - 2026-10-06
+
 ### Fixed
 - [includes/iframe-blocker.php] WP Rocket's iframe LazyLoad bypassed consent. WP Rocket outputs `src="about:blank"` with the real URL in `data-lazy-src`, so the blocker skipped the iframe and WP Rocket's script then loaded standard `youtube.com` with no consent check. The blocker now checks `src`, `data-lazy-src` and `data-src` in turn for a supported video URL. Once blocked, it strips `data-lazy-src`, `data-rocket-lazyload` and the `rocket-lazyload` class so the lazy-loader leaves the iframe alone.
 - [assets/js/ccve-cookiescript.js] Same handling in the front-end fallback: `data-lazy-src` added to the selectors and URL lookup, lazy-loader attributes stripped, and on Cookiebot sites a leftover `data-src` is removed (matching the server-side blocker) so `data-src` lazy-loaders can't load it.
@@ -13,6 +17,8 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ### Changed
 - [README.md] Documented Cookiebot support alongside CookieScript: blocking attributes per manager, the Consent manager setting, Cookiebot's category names and the CTA fallback.
+
+---
 
 ## [2.5.1] - 2026-09-30
 

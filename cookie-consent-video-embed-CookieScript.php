@@ -3,7 +3,7 @@
  * Plugin Name: Bonsai Cookie Consent
  * Plugin URI:  https://thebonsaidigitalcollective.co.uk
  * Description: Replaces YouTube and Vimeo embeds with a consent-safe thumbnail overlay until marketing consent is granted via CookieScript or Cookiebot.
- * Version:     2.5.1
+ * Version:     2.5.2
  * Author:      Ben Ervine / The Bonsai Digital Collective
  * Author URI:  https://thebonsaidigitalcollective.co.uk
  * License:     GPL-2.0+
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'CCVE_COOKIESCRIPT_VERSION', '2.5.1' );
+define( 'CCVE_COOKIESCRIPT_VERSION', '2.5.2' );
 define( 'CCVE_COOKIESCRIPT_OPTION_KEY', 'ccve_cookiescript_options' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_REPOSITORY', 'https://github.com/Bonsai-Systems/bonsai-cookie-consent' );
 define( 'CCVE_COOKIESCRIPT_GITHUB_BRANCH', 'main' );

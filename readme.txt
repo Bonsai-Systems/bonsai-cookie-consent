@@ -4,7 +4,7 @@ Tags: cookiescript, cookiebot, youtube, vimeo, consent, gdpr
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,10 @@ Yes: `add_filter( 'ccve_cookiescript_block_iframes', '__return_false' );`. Video
 Yes. Set Default video background image URL in plugin settings.
 
 == Changelog ==
+
+= 2.5.2 =
+* Fixed videos lazy-loaded by WP Rocket getting past consent. WP Rocket keeps the real video URL in `data-lazy-src`, which the blocker didn't check. It now does, and stops WP Rocket loading the video itself.
+* Fixed videos inside a theme's responsive video container showing at double height before consent, or collapsing to nothing after it. The placeholder now fills the existing container instead of adding its own 16:9 box.
 
 = 2.5.1 =
 * Fixed videos starting to load before consent. Iframes in the page HTML were only blocked once the page had loaded, so YouTube or Vimeo could already have been contacted. They are now rewritten on the server before the page is sent.
