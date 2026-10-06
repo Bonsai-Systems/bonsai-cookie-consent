@@ -5,6 +5,13 @@ This project adheres to [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [Unreleased]
 
+### Fixed
+- [assets/js/ccve-cookiescript.js] Videos inside a theme ratio box (`.embed-container`, `.videoWrapper`, FitVids, core's `.wp-has-aspect-ratio` responsive embeds) showed at double height before consent and could collapse to 0px after it. The placeholder added its own 16:9 box on top of the parent's padding, and the theme's `position: absolute; height: 100%` iframe rule then sized the video against our empty wrapper. Before wrapping, the script now checks whether the iframe is absolutely positioned, and if so adds `ccve-video-wrapper--fill`.
+- [assets/css/ccve-cookiescript.css] New `.ccve-video-wrapper--fill` modifier makes the wrapper, placeholder and iframe fill the parent's existing ratio box instead of setting their own aspect ratio. Iframes not in a container keep the existing 16:9 behaviour.
+
+### Changed
+- [README.md] Documented Cookiebot support alongside CookieScript: blocking attributes per manager, the Consent manager setting, Cookiebot's category names and the CTA fallback.
+
 ## [2.5.1] - 2026-09-30
 
 ### Fixed

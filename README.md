@@ -22,6 +22,7 @@ A WordPress plugin by [The Bonsai Digital Collective](https://thebonsaidigitalco
   - Darkened overlay
   - Centred consent message
   - Centred CTA link/button
+- Works inside existing theme ratio containers (`.embed-container`, `.videoWrapper`, FitVids, Gutenberg responsive embeds): if the iframe is absolutely positioned, the placeholder fills the container instead of adding its own 16:9 box
 - Automatically reveals the iframe when the consent manager loads the `src`
 - Front-end script still handles iframes injected after page load (modals, load-more) as a fallback
 
